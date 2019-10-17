@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title><![CDATA[在Mac本中使用git以及向GitHub同步代码]]></title>
+    <url>%2F2019%2F10%2F17%2Fmac-github%2F</url>
+    <content type="text"><![CDATA[1. 安装git程序git客户端程序地址：https://git-scm.com/download/mac 1$ git --version ——查看是否安装成功 2. 创建SSH步骤一：在终端输入命令： 1cd ~/.ssh 如果出现 -bash: cd: /Users/glamor/.ssh: No such file or directory，说明之前没有用过，直接进入步骤二。如果之前用过需要清理原来的rss，终端输入命令： 1$ mkdir key_backup $ cp id_rsa* key_backup $ rm id_rsa* 步骤二：终端输入命令： 1$ ssh-keygen -t rsa -C XXX@XX.com (邮箱是GitHub的注册邮箱)一直回车，直到Overwrite(y/n)?,输入y,一直回车 确认完毕后，程序将生成一对密钥存放在以下文件夹：/users/用户/.ssh/密钥分成两个文件，一个私钥（id_rsa）、一个公钥（id_rsa.pub）。私钥保存在您的电脑上，公钥交项目负责人添加到服务器上。用户必须拥有与服务器公钥所配对的私钥，才能访问服务器上的代码库。 3. 向GitHub上设置自己的公钥步骤一：复制公钥执行命令： 1$ pbcopy &lt; ~/.ssh/id_rsa.pub 将公钥的内容复制到内存里。 步骤二：登录GitHub =&gt; Settings =&gt; SSH and GPG keys =&gt; new SSH keyTitle 随便写，key 粘贴刚才复制的步骤三： 测试连接是否成功在终端输入命令：ssh -T git@github.com成功之后就可以使用git管理代码了。 4. 备注使用VSCode中的git功能初次推送代码时可能需要输入一下代码： 12$ git config --global user.email &quot;user.email&quot;$ git config --global user.name &quot;user.name&quot;]]></content>
+      <categories>
+        <category>Git</category>
+      </categories>
+      <tags>
+        <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[JavaScript中的Promise]]></title>
+    <url>%2F2019%2F10%2F15%2Fjs-promise%2F</url>
+    <content type="text"></content>
+      <categories>
+        <category>JavaScript</category>
+      </categories>
+      <tags>
+        <tag>JavaScript</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Node.js 链接Mysql 报错及解决方案]]></title>
+    <url>%2F2019%2F10%2F15%2Fnode-mysql-error%2F</url>
+    <content type="text"><![CDATA[错误信息：Error: ER_NOT_SUPPORTED_AUTH_MODE: Client does not support authentication protocol requested by server; consider upgrading MySQL client 报错原因：mysql8.0.4开始引入一个caching_sha2_password模块作为默认身份验证插件，数据库连接时验证身份的工作方式(handshake process)会与以往不同。但以前版本的通过mysql_native_password 创建的账户仍然可以正常工作，只是验证这些账户时会切回mysql_native_password的工作方式，以此实现向下兼容。nodejs版本尚未跟进caching_sha2_password的实现，所以需要通过命令来手动切换验证账号方式 解决方法：ALTER USER ‘root’@’localhost’ IDENTIFIED WITH mysql_native_password BY ‘password’;]]></content>
+      <categories>
+        <category>Node.js</category>
+      </categories>
+      <tags>
+        <tag>Mysql</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[H5视频播放器]]></title>
+    <url>%2F2018%2F10%2F18%2Fh5-video%2F</url>
+    <content type="text"><![CDATA[1. video标签相关属性微信在video标签上新增了一些x5的私有属性，仅适用于Android平台 x5-video-player-type 启用H5同层播放器 1&lt;video id=&quot;test_video&quot; src=&quot;xxx&quot; x5-video-player-type=&quot;h5&quot; /&gt; x5-video-player-fullscreen 是否全屏(‘true’或’false’) 1&lt;video id=&quot;test_video&quot; src=&quot;xxx&quot; x5-video-player-type=&quot;h5&quot; x5-video-player-fullscreen=&quot;true&quot;/&gt; 需要监听窗口大小变化(resize)实现全屏 1234567window.onresize = function()&#123;test_video.style.width = window.innerWidth + &quot;px&quot;;test_video.style.height = window.innerHeight + &quot;px&quot;;&#125; x5-video-orientation 控制横竖屏可选值： ‘landscape’ 横屏, ‘portraint’竖屏,’landscape|portrait’自动旋转默认值：portraint 123&lt;video ... x5-video-player-type=”h5” x5-video-orientation=&quot;landscape&quot;/&gt; --横屏&lt;video ... x5-video-player-type=&quot;h5&quot; x5-video-orientation=&quot;portrait&quot;/&gt; --竖屏&lt;video x5-video-player-type=&quot;h5&quot; x5-video-orientation=&quot;landscape|portrait&quot;/&gt;--跟随手机自动旋转 iOS平台相关的属性： airplay x-webkit-airplay以上两个取值为’allow’或’deny’，通常保险起见用’allow’就可以 1x-webkit-airplay=&quot;allow&quot; playsinlineh5的video播放视频时，在ipad上是默认原来大小的，而在iphone上是默认全屏播放的 1playsinline=&quot;true&quot; webkit-playsinline=&quot;true&quot; /*IOS微信浏览器支持小窗内播放/ webkit-playsinline 2. 视频封面video标签里有一个与视频封面相关的属性poster，但是在使用中发现性能存在一些问题，在Android端打开视频时（加载），会有跳动的感觉，但是如果去掉，在视频加载时（preload取值’auto’，且未用预加载）则会显示空白页面。目前换用了背景图片的方式，但由于视频全屏播放时顶部会有空隙，所以额外加了个background-position: bottom;以及background-size: contain;（取值和视频保持一致），这样设置好的背景在播放视频时就不会漏边了。 3. video事件1234567video.addEventListener(&apos;timeupdate&apos;, function (e) &#123; console.log(video.currentTime) // 当前播放的进度&#125;)video.addEventListener(&apos;ended&apos;, function (e) &#123; // 播放结束时触发&#125;) 4. 视频居中视频的宽高比是固定的，而手机的屏幕宽高比则不是，所以，为了让观看到的视频的体验尽可能一致，以宽度为先，进行适配 1234567891011121314function handleResize() &#123; var sWidth = 9 var sHeight = 16 var width = window.innerWidth var height = window.innerHeight var marginTop = height - (width * sHeight) / sWidth marginTop = Math.round(marginTop) if (marginTop &lt; -2) &#123; video.$wrapper.css(&apos;marginTop&apos;, marginTop / 2 + &apos;px&apos;) &#125; else &#123; video.$wrapper.css(&apos;marginTop&apos;, &apos;0&apos;) &#125;&#125; 5. 备注1.为了让视频真正铺满全屏,可以适当让video的显示区域大于视口区域,这样在显示时在视口外的部截掉后,不会出四周黑边的情况2.iOS 10 之前的版本支持 webkit-playsinline，但是加了这个属性后，在 iOS 9 的上出现只能听到声音不能看到画面的问题，最后使用的标签代码playsinline，然后再加上这个库 iphone-inline-video一起使用。3.Android 是不支持 playsinline 属性使视频内联播放的。但是，如果你看过一些腾讯的视频类 HTML5，会发现它们在微信里是可以内联播放的，而这个功能是需要申请加入白名单的。不过新版的 TBS 内核（&gt;=036849）支持 同层播放器 ，这个不需要申请白名单，只需给 video 设置两个属性 x5-video-player-type=”h5” 和 x5-video-player-fullscreen=”true”4.通过监听这两个事件就可以知道当前的播放状态 1234567document.getElementById(&apos;video&apos;).addEventListener(&quot;x5videoexitfullscreen&quot;, function()&#123; alert(&quot;exit fullscreen&quot;)&#125;)document.getElementById(&apos;video&apos;).addEventListener(&quot;x5videoenterfullscreen&quot;, function()&#123; alert(&quot;enter fullscreen&quot;)&#125;)]]></content>
+      <categories>
+        <category>H5</category>
+      </categories>
+      <tags>
+        <tag>video</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Hexo 多台电脑同步管理博客解决方案]]></title>
+    <url>%2F2018%2F10%2F10%2Fhexo-multiport%2F</url>
+    <content type="text"><![CDATA[Hexo的博客管理是需要源文件的，在家或者在公司不同电脑上可以发布更新博客就需要我们进行一定的处理。我在网上看了好多人的方案是通过在同一仓库建两个分支管理的，master分支存放Hexo生成的静态博客文件，新建hexo分支存放Hexo源文件。 这种方法下所有的文件是公开的，存在一定的安全问题，比如在源码文件中有我们个人设置的一些私有的Key，有些涉及安全的配置并不希望公开。 我的方案是再新建一个私有库，存放我们的Hexo源文件。恰好GitHub在19年开始支持免费创建私有库了我们的处理就更简单了。 1. 在GitHub中新建一个私有库，存放Hexo源文件。2. 本地Hexo源文件上传到私有库。注意：上传之前要删除本地主题文件夹里的.git,不删上传后主题目录是空的 1./themes/maupassant/.git/ 3. 上传12345git initgit add .git commit -m &quot;hexo&quot;git remote add origin 私有库地址git push -u origin master 4. 换电脑操作时只需要把源文件 clone 到本地就行12345git clone 地址npm install hexo ghexo shexo d 5. 同步更新后的源文件push到私有库中，下次更新再在本地拉取最新源码]]></content>
+      <categories>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>GitHub</tag>
+        <tag>Hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Node.js 中常用的几种取参方式]]></title>
+    <url>%2F2018%2F07%2F12%2Fnodejs-req%2F</url>
+    <content type="text"><![CDATA[获取请求中的参数是每个Web后台处理的必经之路，Node.js的 Express框架 提供了四种方法来实现。 1. req.body在请求的body中保存的是提交的一对对键值数据。默认情况下，它是undefined，当你使用比如body-parser和multer这类解析body数据的中间件时，它是填充的。通常用来解析POST请求中的数据 123456789101112const express = require(&apos;express&apos;)const router = express.Router()router.post(&apos;./login&apos;,function(req,res,next) &#123; const name = req.body.name const pass = req.body.password console.log(&apos;name:&apos; + name) console.log(&apos;pass:&apos; + pass) if(name == &apos;sis&apos; &amp;&amp; pass == &apos;1&apos;) &#123; res.send(&apos;1&apos;) &#125; res.send(&apos;is over&apos;)&#125;) 2. req.query一个对象，为每一个路由中的query string参数都分配一个属性。如果没有query string，它就是一个空对象，{}此方法多适用于GET请求，解析GET里的参数 1234567891011// GET /search?q=tobi+ferretreq.query.q// =&gt; &quot;tobi ferret&quot;// GET /shoes?order=desc&amp;shoe[color]=blue&amp;shoe[type]=conversereq.query.order// =&gt; &quot;desc&quot;req.query.shoe.color// =&gt; &quot;blue&quot;req.query.shoe.type// =&gt; &quot;converse&quot; 3. req.params一个对象，其包含了一系列的属性，这些属性和在路由中命名的参数名是一一对应的。例如，如果你有/user/:name路由，name属性可作为req.params.name。这个对象默认值为{}。多适用于restful风格url中的参数的解析 123// GET /user/tjreq.params.name// =&gt; &quot;tj&quot; 当你使用正则表达式来定义路由规则，捕获组的组合一般使用req.params[n]，这里的n是第几个捕获租。这个规则被施加在无名通配符匹配，比如/file/*的路由： 123// GET /file/javascripts/jquery.jsreq.params[0]// =&gt; &quot;javascripts/jquery.js&quot; req.query与req.params的区别 req.params包含路由参数（在URL的路径部分），而req.query包含URL的查询参数（在URL的？后的参数） 4. req.param()被弃用，使用req.params，req.body或者req.query三种方式替换 get接受参数使用req.query,而post接受参数使用req.body]]></content>
+      <categories>
+        <category>Node.js</category>
+      </categories>
+      <tags>
+        <tag>Node.js</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[GitHub中使用hexo搭建博客遇到的报错处理]]></title>
+    <url>%2F2018%2F07%2F10%2Fhexo-blog-error%2F</url>
+    <content type="text"><![CDATA[1. GitHub访问失去CSS样式 原因： 样式加载不出来，会报404错误，URL地址不对。 解决： 修改_config.yml文件中的url地址和根目录 1234url: https://GitHub地址/博客仓库地址/root: /博客仓库地址/permalink: :year/:month/:day/:title/permalink_defaults: 2. 自己配置域名后CSS样式不显示 原因： 404错误，发现URL下多了一层文件夹 解决： 修改_config.yml文件中的url地址和根目录 1234url: https://新绑定的域名root: /permalink: :year/:month/:day/:title/permalink_defaults:]]></content>
+      <categories>
+        <category>GitHub</category>
+      </categories>
+      <tags>
+        <tag>GitHub</tag>
+        <tag>博客</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[在GitHub中快速搭建免费简洁的个人博客]]></title>
+    <url>%2F2018%2F07%2F08%2Fhexo-blog%2F</url>
+    <content type="text"><![CDATA[在GitHub中搭建博客也挺简单的，网上也有很多这方面的教程，其中有做得相当精致的，仅以我个人的博客做简单介绍，并且分享我个人喜欢的简洁主题。 1. 在GitHub中新建一个存放博客的库。环境准备：安装node、npm、git bush、GitHub配置ssh，方面操作。 2. 下载安装HexoHexo 是一个快速、简洁且高效的博客框架 1$ npm install -g hexo-cli 3. 本地新建文件夹，存放博客文件进入文件夹，打开 git bush,执行下面命令： 123hexo init ## 初始化目录hexo g ## 生成hexo s ## 启动 打开localhost:4000 就可以访问简易的页面了。 4. 修改中意的主题个人喜欢的：https://github.com/tufu9441/maupassant-hexo下载： 123$ git clone https://github.com/tufu9441/maupassant-hexo.git themes/maupassant$ npm install hexo-renderer-pug --save$ npm install hexo-renderer-sass --save 5. 重新生成并上传到GitHub1$ hexo d -g ## 生成并上传 其他问题可查看相关文档大道至简——Hexo简洁主题推荐：https://www.haomwei.com/technology/maupassant-hexo.html]]></content>
+      <categories>
+        <category>GitHub</category>
+      </categories>
+      <tags>
+        <tag>GitHub</tag>
+        <tag>博客</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Git分支管理]]></title>
+    <url>%2F2017%2F10%2F16%2Fgit-branch%2F</url>
+    <content type="text"><![CDATA[分支操作允许创建另一路线，从开发主线上分离开来，然后在不影响主线的同时继续工作。 例如，我们发布了1.0版本的产品，可能需要创建一个分支，以便将2.0功能的开发与1.0版本中错误修复分开。 常用命令12345678910111213$ git branch --显示所有分支（*当前分支）$ git branch [branchname] --创建新分支$ git checkout [branchname] --切换分支$ git checkout -b [branchname] --创建一个新的分支，并立即切换到新分支$ git merge --合并分支$ git branch -d [branchname] --删除分支(-D强制删除)$ git branch -v --查看每一个分支的最后一次提交$ git branch --merged --查看哪些分支已经合并到当前分支$ git branch --no-merged --查看所有包含未合并工作的分支$ git branch -m [old_branch new_branch] --重命名分支]]></content>
+      <categories>
+        <category>Git</category>
+      </categories>
+      <tags>
+        <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Git常用命令整理]]></title>
+    <url>%2F2017%2F10%2F15%2Fgit-command%2F</url>
+    <content type="text"><![CDATA[Git 各平台安装包下载地址为：http://git-scm.com/downloads 1. 查看git配置信息1$ git config --list 2. git查看/修改用户名和邮箱地址查看用户名和邮箱地址 12$ git config user.name$ git config user.email 修改用户名和邮箱地址 12$ git config --global user.name &quot;username&quot;$ git config --global user.email &quot;email&quot; 3. git init可以看到在你的项目中生成了 .git 这个子目录。 这就是你的 Git 仓库了，所有有关你的此项目的快照数据都存放在这里。 1$ git init 4. git clone拷贝一个 Git 仓库到本地 1git clone [url] 5. git add把文件修改添加到暂存区 12git add [filename] git add . --添加当前项目的所有文件 6. git status查看在你上次提交之后是否有修改 1git status 7. git commit把暂存区的所有内容提交到当前分支 1git commit -m &quot;说明&quot; 8. 生成 SSH Key本地 Git 仓库和 GitHub 仓库之间的传输是通过SSH加密的，所以我们需要配置验证信息,使用以下命令生成 SSH Key: 1$ ssh-keygen -t rsa -C &quot;youremail@example.com&quot; 成功的话会在 ~/ 下生成 .ssh 文件夹，进去，打开 id_rsa.pub，复制里面的 key。在 github 上，进入 Account =&gt; Settings（账户配置）=&gt; SSH and GPG keys =&gt; New SSH key(title 设置标题，可以随便填，粘贴在你电脑上生成的 key) 1ssh -T git@github.com 9. 添加远程服务器12$ git remote add [shortname] [url]$ git remote add origin [github仓库地址] --添加github仓库地址 10. 推送到远程仓库12$ git push [alias] [branch] --将你的 [branch] 分支推送成为 [alias] 远程仓库上的 [branch] 分支$ git push origin master 11. 查看提交历史1234$ git log$ git log --oneline --查看历史记录的简洁版本$ git log --graph --查看历史中什么时候出现了分支、合并$ git log --reverse --oneline --逆向显示所有日志]]></content>
+      <categories>
+        <category>Git</category>
+      </categories>
+      <tags>
+        <tag>Git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Hello World]]></title>
+    <url>%2F2016%2F09%2F20%2Fhello-world%2F</url>
+    <content type="text"><![CDATA[“Hello, world”程序是指在计算机屏幕上输出“Hello,world”这行字符串的计算机程序，“hello, world”的中文意思是“你好，世界。”。这个例程在Brian Kernighan 和Dennis M. Ritchie合著的《The C Programme Language》使用而广泛流行。因为它的简洁，实用，并包含了一个该版本的C程序首次在1974年Brian Kernighan所撰写的《Programming in C: A Tutorial》出现 1printf(&quot;hello, world\n&quot;); 实际上将“Hello”和“World”一起使用的程序最早出现于1972年，在贝尔实验室成员Brian Kernighan撰写的内部技术文件《Introduction to the Language B》之中： 1234567main()&#123; extern a,b,c; putchar(a);putchar(b);putchar(c);putchar(&apos;!*n&apos;);&#125;a&apos;hell&apos;;b&apos;o,w&apos;;c&apos;orld&apos;; 最初的”hello, world”打印内容有个标准，即全小写，有逗号，逗号后空一格，且无感叹号。不过沿用至今，完全遵循传统标准形式的反而很少出现。 其他语言中的Hello，world！易语言 1调试输出(&quot;Hello, world!&quot;) GBasic 1print(&quot;Hello, world!&quot;) VB 12345Module MainFrm Sub Main() System.Console.WriteLine(&quot;Hello, World!&quot;) End SubEnd Module C 123456#include &lt;stdio.h&gt;int main()&#123; printf(&quot;Hello, World!&quot;); return 0;&#125; Swift 1print(&quot;Hello, World!&quot;) Go 1234package mainfunc main() &#123; println(&quot;Hello, World!&quot;)&#125; BATCH 123@echo offecho Hello, World!pause Java 12345public class HelloWorld&#123; public static void main(String[] args)&#123; System.out.println( &quot;Hello, World!&quot; ); &#125;&#125; C++ 1234567#include &lt;iostream&gt;using namespace std;int main()&#123; cout&lt;&lt;&quot;Hello, World!&quot;&lt;&lt;flush; return 0;&#125; C# 12345678910namespace HelloWorld&#123; class Program &#123; static void Main(string[] args) &#123; System.Console.Write(&quot;Hello, World!&quot;); &#125; &#125;&#125; PHP 1echo &quot;Hello, World!&quot;; ASP 1response.write (&quot;Hello, World!&quot;) JavaScript 1console.log(&quot;Hello, World!&quot;) Python 2 1print &quot;Hello, World!&quot; Python 3 1print(&quot;Hello, World!&quot;) LaTeX 123456\documentclass&#123;article&#125; \begin&#123;document&#125; Hello, World! \end&#123;document&#125; Mathematica方法一：基于Wolfram 底层语言（进入表达式界面使用） [1] 1Cell[&quot;Hello, World!&quot;] 方法二：直接使用数学输出函数 1CellPrint[Cell[&quot;Hello, World!&quot;]] Ruby 123def hello() return &quot;Hello , World&quot; end Free pascal 1writeln(&apos;Hello, world!&apos;); Kotlin 123fun main(args: Array&lt;String&gt;) &#123; println(&quot;Hello, world!&quot;)&#125; MATLAB 1disp(&apos;Hello, world!&apos;) R 12print(&apos;hello word!&apos;)[1] &quot;hello word!&quot;]]></content>
+      <categories>
+        <category>程序语言</category>
+      </categories>
+      <tags>
+        <tag>程序趣事</tag>
+      </tags>
+  </entry>
+</search>
