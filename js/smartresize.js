@@ -19,7 +19,7 @@
                 clearTimeout(timeout);
             }
             else if (execAsap) {
-                func.apply(obj, args);
+                func.apply(obj, args); 
             }
 
             timeout = setTimeout(delayed, threshold || 100);
